@@ -1,0 +1,30 @@
+From 9dba90eb2f4aa18692ff95740982bc046602efd5 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
+Date: Fri, 11 Sep 2026 18:59:58 +0200
+Subject: [PATCH] Remove redefinition of `InterlockedExchangePointer`
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Michał Górny <mgorny@gentoo.org>
+---
+ win32/nt.c | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/win32/nt.c b/win32/nt.c
+index a6cf859..47de6c3 100644
+--- a/win32/nt.c
++++ b/win32/nt.c
+@@ -52,12 +52,6 @@
+ #  define FILE_SHARE_DELETE 0x00000004
+ #endif
+ 
+-/* This macro definition is missing in old versions of MS' winbase.h. */
+-#ifndef InterlockedExchangePointer
+-#  define InterlockedExchangePointer(Target, Value) \
+-      (PVOID)InterlockedExchange((PLONG)(Target), (LONG)(Value))
+-#endif
+-
+ 
+ /* private prototypes */
+ 
