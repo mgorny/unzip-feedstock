@@ -1,29 +1,29 @@
-From 749c7a57f23afd0c4a015485e32f0864f6d47739 Mon Sep 17 00:00:00 2001
+From de368ab3c339e892b3ac393f40df892c0f02879a Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
-Date: Fri, 11 Sep 2026 18:59:58 +0200
-Subject: [PATCH] Remove redefinition of `InterlockedExchangePointer`
+Date: Fri, 11 Sep 2026 19:11:38 +0200
+Subject: [PATCH] Use system InterlockedExchangePointer()
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Michał Górny <mgorny@gentoo.org>
 ---
- win32/nt.c | 7 -------
- 1 file changed, 7 deletions(-)
+ win32/nt.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
 diff --git a/win32/nt.c b/win32/nt.c
-index a6cf859..083cb43 100644
+index a6cf859..04b9955 100644
 --- a/win32/nt.c
 +++ b/win32/nt.c
-@@ -35,7 +35,6 @@
- 
-  */
- 
--#define WIN32_LEAN_AND_MEAN
+@@ -39,6 +39,7 @@
  #define UNZIP_INTERNAL
  #include "../unzip.h"
  #include <windows.h>
-@@ -52,12 +51,6 @@
++#include <winnt.h>
+ #ifdef __RSXNT__
+ #  include "../win32/rsxntwin.h"
+ #endif
+@@ -52,12 +53,6 @@
  #  define FILE_SHARE_DELETE 0x00000004
  #endif
  
