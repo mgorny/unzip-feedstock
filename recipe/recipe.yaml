@@ -1,8 +1,11 @@
-{% set version = "6.0" %}
+schema_version: 1
+
+context:
+  version: "6.0"
 
 package:
   name: unzip
-  version: {{ version }}
+  version: ${{ version }}
 
 source:
   url: http://deb.debian.org/debian/pool/main/u/unzip/unzip_6.0.orig.tar.gz
@@ -37,29 +40,28 @@ source:
     - patches/26-cve-2019-13232-fix-bug-in-uzinflate.patch
     - patches/27-zipgrep-avoid-test-errors.patch
 
-
 build:
   number: 4
-  skip: True  # [win]
+  skip: win
 
 requirements:
   build:
-    - "{{ compiler('c') }}"
-    - "{{ stdlib('c') }}"
+    - ${{ compiler('c') }}
+    - ${{ stdlib('c') }}
     - make
 
-test:
-  commands:
-    - unzip -h
-    - zipinfo -h
-    # Ensure lchmod is not being used by the binary
-    - test "$(strings $(which unzip) | grep -ci lchmod)" -eq 0  # [linux]
+tests:
+  - script:
+      - unzip -h
+      - zipinfo -h
+      - if: linux
+        then: test "$(strings $(which unzip) | grep -ci lchmod)" -eq 0
 
 about:
-  home: http://www.info-zip.org/
   license: LicenseRef-BSD-like
   license_file: LICENSE
   summary: simple program for unzipping files
+  homepage: http://www.info-zip.org/
 
 extra:
   recipe-maintainers:
