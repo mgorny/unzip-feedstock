@@ -5,5 +5,5 @@ FOR /F %%P IN (patches\series) DO (
     IF !errorlevel! neq 0 EXIT /b !errorlevel!
 )
 
-nmake /F win32/Makefile
+nmake /F win32/Makefile NOASM=1
 IF !errorlevel! neq 0 EXIT /b !errorlevel!
