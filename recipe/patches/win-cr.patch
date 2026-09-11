@@ -1,0 +1,90 @@
+From eb9af6244d78067db36bd1b21ff162b99351f89b Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Micha=C5=82=20G=C3=B3rny?= <mgorny@gentoo.org>
+Date: Fri, 11 Sep 2026 18:41:26 +0200
+Subject: [PATCH] Redefine CR as ZIP_CR for Windows compat
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Michał Górny <mgorny@gentoo.org>
+---
+ fileio.c       | 6 +++---
+ unzpriv.h      | 6 +++---
+ win32/w32cfg.h | 2 +-
+ 3 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/fileio.c b/fileio.c
+index ba0a1d0..183cda1 100644
+--- a/fileio.c
++++ b/fileio.c
+@@ -1011,7 +1011,7 @@ static int partflush(__G__ rawbuf, size, unshrink)
+                 ++p;
+             G.didCRlast = FALSE;
+             for (q = transbuf;  (extent)(p-rawbuf) < (extent)size;  ++p) {
+-                if (*p == CR) {           /* lone CR or CR/LF: treat as EOL  */
++                if (*p == ZIP_CR) {       /* lone CR or CR/LF: treat as EOL  */
+                     PutNativeEOL
+                     if ((extent)(p-rawbuf) == (extent)size-1)
+                         /* last char in buffer */
+@@ -2115,7 +2115,7 @@ int do_string(__G__ length, option)   /* return PK-type error code */
+              * (since used before A_TO_N(), check for CR instead of '\r')
+              */
+             while (*p) {
+-                while (*p == CR)
++                while (*p == ZIP_CR)
+                     ++p;
+                 *q++ = *p++;
+             }
+@@ -2164,7 +2164,7 @@ int do_string(__G__ length, option)   /* return PK-type error code */
+                     pause = TRUE;
+                     if (p[1] == LF)        /* ASCII LF */
+                         *q++ = *++p;
+-                    else if (p[1] == CR && p[2] == LF) {  /* ASCII CR LF */
++                    else if (p[1] == ZIP_CR && p[2] == LF) {  /* ASCII CR LF */
+                         *q++ = *++p;
+                         *q++ = *++p;
+                     }
+diff --git a/unzpriv.h b/unzpriv.h
+index dc9eff5..cafdc9d 100644
+--- a/unzpriv.h
++++ b/unzpriv.h
+@@ -282,7 +282,7 @@
+ #  define INT_SPRINTF
+ #  define timezone      _timezone
+ #  define lenEOL        2
+-#  define PutNativeEOL  {*q++ = native(CR); *q++ = native(LF);}
++#  define PutNativeEOL  {*q++ = native(ZIP_CR); *q++ = native(LF);}
+ #  undef SHORT_NAMES
+ #  if (!defined(NOTIMESTAMP) && !defined(TIMESTAMP))
+ #    define TIMESTAMP
+@@ -417,7 +417,7 @@
+ #  endif
+ #  define DATE_FORMAT     dateformat()
+ #  define lenEOL          2
+-#  define PutNativeEOL    {*q++ = native(CR); *q++ = native(LF);}
++#  define PutNativeEOL    {*q++ = native(ZIP_CR); *q++ = native(LF);}
+ #  if (!defined(NO_EF_UT_TIME) && !defined(USE_EF_UT_TIME))
+ #    define USE_EF_UT_TIME
+ #  endif
+@@ -1841,7 +1841,7 @@
+ #define HSIZE       (1 << MAX_BITS)    /* size of global work area */
+ 
+ #define LF     10        /* '\n' on ASCII machines; must be 10 due to EBCDIC */
+-#define CR     13        /* '\r' on ASCII machines; must be 13 due to EBCDIC */
++#define ZIP_CR 13        /* '\r' on ASCII machines; must be 13 due to EBCDIC */
+ #define CTRLZ  26        /* DOS & OS/2 EOF marker (used in fileio.c, vms.c) */
+ 
+ #ifdef EBCDIC
+diff --git a/win32/w32cfg.h b/win32/w32cfg.h
+index bb140ce..5254b77 100644
+--- a/win32/w32cfg.h
++++ b/win32/w32cfg.h
+@@ -184,7 +184,7 @@
+ #endif
+ #define DATE_SEPCHAR  dateseparator()
+ #define lenEOL        2
+-#define PutNativeEOL  {*q++ = native(CR); *q++ = native(LF);}
++#define PutNativeEOL  {*q++ = native(ZIP_CR); *q++ = native(LF);}
+ 
+ #if (defined(__RSXNT__) && !defined(HAVE_MKTIME))
+ #  define HAVE_MKTIME           /* use mktime() in time conversion routines */

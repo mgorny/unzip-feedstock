@@ -11,6 +11,8 @@ package:
 source:
   - url: http://deb.debian.org/debian/pool/main/u/unzip/unzip_${{ version }}.orig.tar.gz
     sha256: 036d96991646d0449ed0aa952e4fbe21b476ce994abc276e49d30e686708bd37
+    patches:
+      - patches/win-cr.patch
   - url: http://deb.debian.org/debian/pool/main/u/unzip/unzip_${{ version }}-${{ deb_patchset }}.debian.tar.xz
     sha256: d7dc23f5254c6711dc05f467e70236cfd50a7931001c6152904474b19f295c38
 
