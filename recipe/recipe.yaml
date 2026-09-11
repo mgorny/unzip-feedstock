@@ -16,14 +16,17 @@ source:
 
 build:
   number: 5
-  skip: win
 
 requirements:
   build:
     - ${{ compiler('c') }}
     - ${{ stdlib('c') }}
-    - make
-    - patch
+    - if: unix
+      then:
+        - make
+        - patch
+      else:
+        - m2-patch
 
 tests:
   - script:
